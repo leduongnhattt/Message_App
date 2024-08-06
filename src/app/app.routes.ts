@@ -7,7 +7,8 @@ import { RegisterComponent } from './pages/register/register.component';
 
 export const routes: Routes = [
   {
-    path: '', component: MasterComponent, children: [
+    path: '', component: MasterComponent,
+    children: [
       {
         path: 'message', component: MessagesComponent
       },
