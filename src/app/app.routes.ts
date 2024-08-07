@@ -10,7 +10,7 @@ export const routes: Routes = [
     path: '', component: MasterComponent,
     children: [
       {
-        path: 'message', component: MessagesComponent
+        path: 'messages', component: MessagesComponent
       },
       {
         path: 'compose', component: ComposeComponent
