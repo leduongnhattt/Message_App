@@ -86,6 +86,7 @@ class AuthController {
           _id: user._id.toString(),
           email: user.email,
           name: user.name,
+          token: user.token || ''
         };
         return response.status(200).json({ data });
       }
@@ -96,8 +97,24 @@ class AuthController {
   }
 
 
-  public async logout(request: Request, respone: Response) {
+  public async logout(request: IRequest, response: Response) {
+    try {
+      const email = request.user?.email;
 
+      const user = await UserModel.findOne({
+        email,
+      });
+      if(user) {
+        user.token = null;
+        await user.save();
+      }
+      return response
+        .status(201)
+        .json({ message: 'User logout successfully '});
+    }
+    catch(error) {
+      return response.status(400).json({ status: false, error});
+    }
   }
 }
 
