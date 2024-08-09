@@ -1,15 +1,17 @@
+import { error } from 'console';
+import { request } from 'http';
 
 import { loginSchema, registerSchema } from './../_helpers/validators/index';
 import { Request, Response } from "express";
 import bcrypt from 'bcrypt';
 import { UserModel } from '../db/user';
-import { IUser } from '../models/common.model';
+import { IRequest, IUser } from '../models/common.model';
 import { generateToken } from '../middleware/authenticate';
 
 class AuthController {
-  public async login(request: Request, respone: Response) {
+  public async login(request: Request, response: Response) {
     try {
-      const { email, password} = request.body;
+      const { email, password } = request.body;
 
       loginSchema.parse({ email, password });
 
@@ -17,34 +19,36 @@ class AuthController {
         email,
       });
 
-      if(user) {
+      if (user) {
         const data: IUser = {
           _id: user._id.toString(),
           email: user.email,
           name: user.name,
-          token: ''
-        }
+          token: '',
+        };
+
         const isPasswordMatch = await bcrypt.compare(password, user.password);
-        if(isPasswordMatch) {
+        if (isPasswordMatch) {
           const token = generateToken(data);
           user.token = token;
           await user.save();
           data.token = token;
 
-          return respone
+          return response
             .status(201)
-            .json({ message: 'User logged in successfully', data: user})
+            .json({ message: 'User logged in successfully', data });
         }
       }
-      return respone
+
+      return response
         .status(400)
-        .json({ status: false, message: 'Invalid credentials' })
-    }
-    catch(error){
-      return respone.status(400).json({ status: false, error})
+        .json({ status: false, message: 'Invalid credentials' });
+    } catch (error) {
+      return response.status(400).json({ status: false, error });
     }
   }
-  public async register(request: Request, respone: Response) {
+
+  public async register(request: Request, response: Response) {
     try {
       const { name, email, password } = request.body;
 
@@ -59,16 +63,39 @@ class AuthController {
         email,
         password: hashPassword,
       });
+
       await user.save();
 
-      return respone
+      return response
         .status(201)
-        .json({ message: 'User created successfully' })
-    }
-    catch(error) {
-      return respone.status(400).json({ status: false, error });
+        .json({ message: 'User created successfully' });
+    } catch (error) {
+      return response.status(400).json({ status: false, error });
     }
   }
+
+  public async me(request: IRequest, response: Response) {
+    try {
+      const email = request.user?.email;
+
+      const user = await UserModel.findOne({
+        email
+      });
+      if(user) {
+        const data: IUser = {
+          _id: user._id.toString(),
+          email: user.email,
+          name: user.name,
+        };
+        return response.status(200).json({ data });
+      }
+    }
+    catch(error) {
+      return response.status(400).json({ status: false, error });
+    }
+  }
+
+
   public async logout(request: Request, respone: Response) {
 
   }
