@@ -3,6 +3,8 @@ import { loginSchema, registerSchema } from './../_helpers/validators/index';
 import { Request, Response } from "express";
 import bcrypt from 'bcrypt';
 import { UserModel } from '../db/user';
+import { IUser } from '../models/common.model';
+import { generateToken } from '../middleware/authenticate';
 
 class AuthController {
   public async login(request: Request, respone: Response) {
@@ -16,8 +18,19 @@ class AuthController {
       });
 
       if(user) {
+        const data: IUser = {
+          _id: user._id.toString(),
+          email: user.email,
+          name: user.name,
+          token: ''
+        }
         const isPasswordMatch = await bcrypt.compare(password, user.password);
         if(isPasswordMatch) {
+          const token = generateToken(data);
+          user.token = token;
+          await user.save();
+          data.token = token;
+
           return respone
             .status(201)
             .json({ message: 'User logged in successfully', data: user})
