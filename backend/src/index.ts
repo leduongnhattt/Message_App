@@ -3,10 +3,12 @@ import { error } from "console";
 import express from "express"
 import mongoose from 'mongoose'
 import router from './routes/route'
+import cors from 'cors'
 
 const PORT = 4000;
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 const MONGO_URL = 'mongodb://127.0.0.1:27017'
 mongoose.connect(MONGO_URL, {

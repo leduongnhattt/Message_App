@@ -6,12 +6,13 @@ import { NgxsModule } from '@ngxs/store'
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr'
+import { HttpClientModule } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }),
   provideRouter(routes),
   provideClientHydration(),
-  importProvidersFrom(NgxsModule.forRoot()),
+  importProvidersFrom(NgxsModule.forRoot(), HttpClientModule),
   provideAnimations(),
   provideToastr(
     {
