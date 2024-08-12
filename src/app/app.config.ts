@@ -8,12 +8,13 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr'
 import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { httpInterceptor } from './core/interceptors/http.interceptor';
+import { MessageState } from './store/MessageState';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }),
   provideRouter(routes),
   provideClientHydration(),
-  importProvidersFrom(NgxsModule.forRoot(), HttpClientModule),
+  importProvidersFrom(NgxsModule.forRoot([MessageState]), HttpClientModule),
   provideAnimations(),
   provideToastr(
     {
