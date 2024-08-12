@@ -2,6 +2,7 @@ export interface IUser {
   _id: string;
   name: string;
   email: string;
+  token: string;
 }
 
 export interface ILogin {
@@ -11,6 +12,6 @@ export interface ILogin {
 
 export interface ILoginResponse {
   message: string;
-  token: string;
-  user: IUser;
+
+  data: IUser;
 }

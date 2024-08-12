@@ -6,7 +6,8 @@ import { NgxsModule } from '@ngxs/store'
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr'
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { httpInterceptor } from './core/interceptors/http.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }),
@@ -20,7 +21,8 @@ export const appConfig: ApplicationConfig = {
       positionClass: 'toast-top-center',
       preventDuplicates: true,
     }
-  )
+  ),
+  provideHttpClient(withInterceptors([httpInterceptor])),
 ]
 };
 

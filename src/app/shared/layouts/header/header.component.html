@@ -4,7 +4,7 @@
     <div class="flex items-center">
       <a routerLink="register" routerLinkActive="router-link-active"  class="px-3 font-medium hover:text-blue-600">Register</a>
       <a routerLink="" class="px-3 font-medium hover:text-blue-600">Login</a>
-      <a href="" class="px-3 font-medium hover:text-blue-600">Logout</a>
+      <div class="px-3 font-medium cursor-pointer hover:text-blue-600" (click)="onLogout()">Logout</div>
     </div>
   </div>
 </header>
