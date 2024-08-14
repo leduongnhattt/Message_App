@@ -1,8 +1,8 @@
-import { Injectable } from "@angular/core";
-import { State, Action, StateContext, Selector } from "@ngxs/store";
-import { tap } from "rxjs";
-import { IUser } from "../core/models/auth.model";
-import { UserService } from "../core/services/user.service";
+import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { IUser } from '../core/models/auth.model';
+import { Injectable } from '@angular/core';
+import { UserService } from '../core/services/user.service';
+import { tap } from 'rxjs';
 
 export class GetAllUser {
   static readonly type = '[User] Get All';

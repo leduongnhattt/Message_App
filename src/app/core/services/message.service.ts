@@ -16,4 +16,16 @@ export class MessageService {
       `${apiEndPoint.MessageEndPoint}`
     )
   }
+  sentMessage(message: IMessage): Observable<IApiResponse<IMessage>> {
+    return this.http.post<IApiResponse<IMessage>>(
+      `${apiEndPoint.MessageEndPoint}`,
+      message
+    );
+  }
+
+  deleteMessage(message: IMessage): Observable<IApiResponse<IMessage>> {
+    return this.http.get<IApiResponse<IMessage>>(
+      `${apiEndPoint.MessageEndPoint}/${message._id}/delete`
+    );
+  }
 }
