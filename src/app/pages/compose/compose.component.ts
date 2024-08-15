@@ -10,11 +10,14 @@ import { CommonModule } from '@angular/common';
 import { GetAllMessage } from '../../store/MessageState';
 import { MessageService } from '../../core/services/message.service';
 import { ToastrService } from 'ngx-toastr';
+import { SocketService } from '../../core/services/socket.service';
+import { Router } from '@angular/router';
+import { ToInputComponent } from '../../shared/component/to-input/to-input.component';
 
 @Component({
   selector: 'app-compose',
   standalone: true,
-  imports: [CardComponent, SidebarComponent, ReactiveFormsModule, CommonModule],
+  imports: [CardComponent, SidebarComponent, ReactiveFormsModule, CommonModule, ToInputComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './compose.component.html',
   styleUrl: './compose.component.scss'
@@ -26,9 +29,12 @@ export class ComposeComponent implements OnInit{
     formBuilder = inject(FormBuilder);
     messageService: MessageService = inject(MessageService);
     toastr: ToastrService = inject(ToastrService);
+    socketService: SocketService = inject(SocketService);
     store:Store = inject(Store);
+    router:Router = inject(Router);
     composeForm: FormGroup;
 
+    selectedUser: IUser | null = null
     constructor() {
       this.composeForm = this.formBuilder.group({
         to: new FormControl('', [Validators.required]),
@@ -57,10 +63,18 @@ export class ComposeComponent implements OnInit{
         next: (response) => {
           this.store.dispatch(new GetAllMessage());
           this.toastr.success(response.message);
+          this.socketService.sentMessage('working');
+          this.router.navigate(['messages/inbox']);
         }
       })
     }
   }
 
+  onSelectUser(user: IUser) {
+    this.composeForm.patchValue({
+      to: user?._id
+    })
+    this.selectedUser = user;
+  }
 
 }
